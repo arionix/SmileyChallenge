@@ -1,48 +1,57 @@
-<!DOCTYPE HTML>
+<!DOCTYPE html>
 <html>
+  <head>
+    <title>Capture Image</title>
 
-<head>
-    <meta name="viewport" content="width=320; user-scalable=no" />
-    <meta http-equiv="Content-type" content="text/html; charset=utf-8">
-    <title>Auth Demo</title>
-    <link rel="stylesheet" href="jquery.mobile/jquery.mobile-1.0rc2.css" type="text/css" charset="utf-8" />
-    <script type="text/javascript" src="js/jquery-1.7.min.js"></script>
-    <script type="text/javascript" charset="utf-8" src="js/phonegap-1.2.0.js"></script>
-    <script src="jquery.mobile/jquery.mobile-1.0rc2.js"></script>
-    <script type="text/javascript" charset="utf-8" src="js/main.js"></script>
-</head>
+    <script type="text/javascript" charset="utf-8" src="cordova-x.x.x.js"></script>
+    <script type="text/javascript" charset="utf-8" src="json2.js"></script>
+    <script type="text/javascript" charset="utf-8">
 
-<body onload="init()">
-    
-<div id="loginPage" data-role="page">
+    // Called when capture operation is finished
+    //
+    function captureSuccess(mediaFiles) {
+        var i, len;
+        for (i = 0, len = mediaFiles.length; i < len; i += 1) {
+            uploadFile(mediaFiles[i]);
+        }
+    }
 
-    <div data-role="header">
-        <h1>Auth Demo</h1>
-    </div>
+    // Called if something bad happens.
+    //
+    function captureError(error) {
+        var msg = 'An error occurred during capture: ' + error.code;
+        navigator.notification.alert(msg, null, 'Uh oh!');
+    }
 
-    <div data-role="content">    
+    // A button will call this function
+    //
+    function captureImage() {
+        // Launch device camera application,
+        // allowing user to capture up to 2 images
+        navigator.device.capture.captureImage(captureSuccess, captureError, {limit: 2});
+    }
 
-        <form id="loginForm">
-        <div data-role="fieldcontain" class="ui-hide-label">
-            <label for="username">Username:</label>
-            <input type="text" name="username" id="username" value="" placeholder="Username" />
-        </div>
+    // Upload files to server
+    function uploadFile(mediaFile) {
+        var ft = new FileTransfer(),
+            path = mediaFile.fullPath,
+            name = mediaFile.name;
 
-        <div data-role="fieldcontain" class="ui-hide-label">
-            <label for="password">Password:</label>
-            <input type="password" name="password" id="password" value="" placeholder="Password" />
-        </div>
+        ft.upload(path,
+            "http://my.domain.com/upload.php",
+            function(result) {
+                console.log('Upload success: ' + result.responseCode);
+                console.log(result.bytesSent + ' bytes sent');
+            },
+            function(error) {
+                console.log('Error uploading file ' + path + ': ' + error.code);
+            },
+            { fileName: name });
+    }
 
-        <input type="submit" value="Login" id="submitButton">
-        </form>
-        
-    </div>
-
-    <div data-role="footer">
-        <h4>&copy; Camden Enterprises</h4>
-    </div>
-
-</div>
-
-</body>
+    </script>
+    </head>
+    <body>
+        <button onclick="captureImage();">Capture Image</button> <br>
+    </body>
 </html>
