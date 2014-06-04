@@ -3,29 +3,11 @@
   <head>
     <title>Device Ready Example</title>
 
-    <script type="text/javascript" charset="utf-8" src="cordova-x.x.x.js"></script>
-    <script type="text/javascript" charset="utf-8">
-
-    // Wait for device API libraries to load
-    //
-    function onLoad() {
-        document.addEventListener("deviceready", onDeviceReady, false);
-    }
-
-    // device APIs are available
-    //
-    function onDeviceReady() {
-        window.addEventListener("batterystatus", onBatteryStatus, false);
-    }
-
-    // Handle the batterystatus event
-    //
-    function onBatteryStatus(info) {
-        console.log("Level: " + info.level + " isPlugged: " + info.isPlugged);
-    }
-
-    </script>
   </head>
-  <body onload="onLoad()">
+  <body>
+  
+  <body style="background: url(http://i.imgur.com/LJn6gK7.png) no-repeat;background-size: 100%;" >
+  
+  
   </body>
 </html>
